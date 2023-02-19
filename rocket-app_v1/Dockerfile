@@ -1,12 +1,17 @@
 FROM rust:alpine  as builder
-WORKDIR /usr/rocket-app_v1
+WORKDIR /app
 RUN apk add --no-cache musl-dev
-COPY ./ ./
+COPY . .
 RUN cargo build --release
 
 FROM alpine
 
-COPY --from=builder target/release/rocket-app_v1 /usr/local/bin/rocket-app_v1
+WORKDIR /usr/local/bin
 
-CMD ["rocket-app_v1"]
+COPY --from=builder /app/target/release/rocket-app_v1 .
+COPY --from=builder /app/Rocket.toml .
+
+EXPOSE 8080
+
+CMD ["./rocket-app_v1"]
 
