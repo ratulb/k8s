@@ -1,7 +1,9 @@
 FROM rust:alpine  as builder
 WORKDIR /app
 RUN apk add --no-cache musl-dev
-COPY . .
+COPY ./src ./src
+COPY ./Cargo.toml .
+COPY ./Rocket.toml .
 RUN cargo build --release
 
 FROM alpine
